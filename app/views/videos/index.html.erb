@@ -19,7 +19,7 @@
       <tr>
         <td><%= video.title %></td>
         <td><%= Time.at(video.duration).utc.strftime("%H:%M:%S") %></td>
-        <td><%= video.youtube_url %></td>
+        <td><%= link_to video.youtube_url, video.youtube_url %></td>
         <td><%= video.reach %></td>
         <td><%= video.views %></td>
       </tr>

@@ -26,10 +26,17 @@ class SubsplashAPIChallenge
     raw_response = HTTParty.get("#{ENDPOINT}?page[size]=50&fields=title,youtube_url,reach&page[num]=#{@page}", 
       format: :json, 
       :headers => HEADERS)
-    compileSubsplashResponse(raw_response) if raw_response.success?
-    if @page < 5
-      @page += 1
-      callSubsplashAPI
+    case raw_response.code 
+      when 200
+        compileSubsplashResponse(raw_response) if raw_response.success?
+        if @page < 5
+          @page += 1
+          callSubsplashAPI
+        end
+      when 404
+        puts "Page not found. Code: #{raw_response.code}"
+      when 500...600
+        puts "An error occured. Code: #{raw_response.code}"
     end
   end
 
@@ -61,7 +68,14 @@ class SubsplashAPIChallenge
   def callYouTubeAPI(batch_string)
     raw_response = HTTParty.get("https://www.googleapis.com/youtube/v3/videos?key=#{YOUTUBE_API_KEY}&part=contentDetails,statistics&id=#{batch_string}",
       format: :json)
-    compileYouTubeResponse(raw_response)
+    case raw_response.code 
+      when 200
+        compileYouTubeResponse(raw_response)
+      when 404
+        puts "Page not found. Code: #{raw_response.code}"
+      when 500...600
+        puts "An error occured. Code: #{raw_response.code}"
+    end
   end
 
   # YouTube API response is used to update each video in the datebase with 
