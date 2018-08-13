@@ -27,3 +27,5 @@
 /config/master.key
 /config/env_vars.yml
 
+# project zip file
+/markreynoso_challenge.zip
